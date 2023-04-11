@@ -1,3 +1,7 @@
+const fs = require('fs');
+const myConsole = new console.Console(fs.createWriteStream('./logs.txt'));
+
+
 const VerifyToken = (req, res ) => {
 
   try {
@@ -17,7 +21,47 @@ const VerifyToken = (req, res ) => {
 
 
 const ReceivedMessage = (req, res ) => {
-  res.send("ReceivedMessage");
+  try {
+    const entry = (req.body["entry"])[0];
+    const changes = (entry["changes"])[0];
+    const value = changes['value'];
+    const messageObject = value['messages'];
+
+    myConsole.log({messageObject});
+    
+    if (typeof messageObject != 'undefined') {
+      const message = messageObject[0]; 
+      const text = getTextUser(message);
+      myConsole.log({text});
+    }
+
+    res.send("EVENT_RECEIVED");
+  } catch (error) {
+    myConsole.log(error);
+    res.send("EVENT_RECEIVED");
+  }
+}
+
+function getTextUser(messages) {
+  let text = "";
+  const typeMessage = messages['type'];
+
+  if(typeMessage == "text") {
+    text = (messages["text"]["body"]);
+  } else if (typeMessage == 'interactive') {
+
+    const interactiveObject = messages['interactive'];
+    const typeInteractive = interactiveObject["type"];
+
+    text = (typeInteractive == "button_reply") 
+      ? (interactiveObject["button_reply"])["title"] 
+      : (typeInteractive == "list_reply") 
+        ? (interactiveObject["list_reply"])["title"] : '';    
+
+  }
+
+  return text;
+
 }
 
 module.exports = {
