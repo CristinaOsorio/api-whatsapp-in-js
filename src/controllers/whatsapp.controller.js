@@ -1,11 +1,13 @@
 const fs = require('fs');
 const myConsole = new console.Console(fs.createWriteStream('./logs.txt'));
+const whatsappService = require("../services/whatsapp.service")
 
 
 const VerifyToken = (req, res ) => {
 
   try {
-    let accessToken = "p8xuH!n0=JeDx1j7hSUVv=O2pgbjHEAJgfciuyPW4qb5N6mbnhKUI/M!/V91NDBgz0Zs8n5TRqbj8v=Ji?1d2jTAq=f86qwDpNoL0YFsMKB!Xlytasv2eKsLSo00=SDGtIJDsZzAJ/nuW1pSOI150aSl7BAq3AX90hpK3!QSqn-P-wMQ5ACFZ1PPkVq8ZqMk!-qjR89rKgyI3bLvuyj?1x3XzP8tloMDHMbTtDekWDpHZ6t-/pQFO4q=aIg5x9EN";
+    // TODO: Crear token de acceso
+    let accessToken = "";
     let token = req.query["hub.verify_token"];
     let challenge = req.query["hub.challenge"];
 
@@ -32,7 +34,11 @@ const ReceivedMessage = (req, res ) => {
     if (typeof messageObject != 'undefined') {
       const message = messageObject[0]; 
       const text = getTextUser(message);
+      const number = message["from"];
       myConsole.log({text});
+      myConsole.log({number});
+      // TODO: In the case of Mexico, the number is returned with the structure 521 for the sending to update to 52 to work.
+      whatsappService.sendMesaageWhatsapp("usuairo dijo: " + text, number)
     }
 
     res.send("EVENT_RECEIVED");
