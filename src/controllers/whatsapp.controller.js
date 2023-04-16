@@ -1,7 +1,7 @@
 const fs = require('fs');
 const myConsole = new console.Console(fs.createWriteStream('./logs.txt'));
-const whatsappService = require("../services/whatsapp.service")
-
+const whatsappService = require("../services/whatsapp.service");
+const samples = require("../shared/sampleModel.model");
 
 const VerifyToken = (req, res ) => {
 
@@ -28,19 +28,65 @@ const ReceivedMessage = (req, res ) => {
     const changes = (entry["changes"])[0];
     const value = changes['value'];
     const messageObject = value['messages'];
-
-    myConsole.log({messageObject});
-    
+   
     if (typeof messageObject != 'undefined') {
-      const message = messageObject[0]; 
-      const text = getTextUser(message);
-      const number = message["from"];
+      const messages = messageObject[0]; 
+      const numberFrom = messages["from"];
+      const text = getTextUser(messages).toLowerCase();
+      // TODO: In the case of Mexico, the number is returned with the structure 521 for the sending to update to 52 to work.
+      const number = numberFrom.slice(0, 2) + numberFrom.slice(3);
       myConsole.log({text});
       myConsole.log({number});
-      // TODO: In the case of Mexico, the number is returned with the structure 521 for the sending to update to 52 to work.
-      whatsappService.sendMesaageWhatsapp("usuairo dijo: " + text, number)
-    }
 
+    
+      if (text == "text") {
+        myConsole.log('Entro a text');
+        let data = samples.sendText(`Hola usuario: ${number}` , number);
+        myConsole.log({data});
+        whatsappService.sendMesaageWhatsapp(data);
+      } 
+      else if (text == "image"){
+        myConsole.log('Entro a image');
+        let data = samples.sendImage(number);
+        whatsappService.sendMesaageWhatsapp(data);
+      }
+       else if (text == "video"){
+          myConsole.log('Entro a video');
+        let data = samples.sendVideo(number);
+        whatsappService.sendMesaageWhatsapp(data);
+      }
+       else if (text == "audio"){
+          myConsole.log('Entro a audio');
+        let data = samples.sendAudio(number);
+        whatsappService.sendMesaageWhatsapp(data);
+      }
+       else if (text == "document"){
+          myConsole.log('Entro a document');
+        let data = samples.sendDocument(number);
+        whatsappService.sendMesaageWhatsapp(data);
+      }
+      else if (text == "location"){
+        myConsole.log('Entro a location');
+        let data = samples.sendLocation(number);
+        whatsappService.sendMesaageWhatsapp(data);
+      } 
+       else if (text == "button"){
+          myConsole.log('Entro a button');
+        let data = samples.sendButton(number);
+        whatsappService.sendMesaageWhatsapp(data);
+      } 
+      else if (text == "list"){
+          myConsole.log('Entro a list');
+        let data = samples.sendList(number);
+        whatsappService.sendMesaageWhatsapp(data);
+      } 
+      else {
+        myConsole.log('Entro a default');
+        let data = samples.sendText("No entiendo ", number);
+        myConsole.log({data});
+        whatsappService.sendMesaageWhatsapp(data);
+      }
+    }
     res.send("EVENT_RECEIVED");
   } catch (error) {
     myConsole.log(error);
