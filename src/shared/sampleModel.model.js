@@ -117,7 +117,7 @@ function sendButton(number) {
 }
 
 function sendList(number){
-  const data = JSON.stringify({
+  return JSON.stringify({
       "messaging_product": "whatsapp",
       "to": number,
       "type": "interactive",
@@ -166,7 +166,6 @@ function sendList(number){
           }
       }
   });
-  return data;
 }
 
 module.exports = {
