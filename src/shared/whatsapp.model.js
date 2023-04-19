@@ -5,7 +5,7 @@ function messageText(textResponse, number) {
     "to": number,
     "type": "text",
     "text": {
-        "preview_url": false,
+        "preview_url": true,
         "body": textResponse
     }
   });
@@ -63,7 +63,60 @@ function messageList(number){
   });
 }
 
+function messageButton(number) {
+  return JSON.stringify({
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to: number,
+    type: "interactive",
+    interactive: {
+			type: "button",
+			body: {
+				text: "Selecciona uno de los productos"
+			},
+			"action": {
+				"buttons": [
+					{
+						"type": "reply",
+						"reply": {
+							"id": "prod-001",
+							"title": "Laptop"
+						}
+					},
+					{
+						"type": "reply",
+						"reply": {
+							"id": "prod-002",
+							"title": "Computadora"
+						}
+					}
+				]
+   		}
+    }
+  });
+}
+
+function messageLocation(number)  {
+	return JSON.stringify({
+		messaging_product: "whatsapp",
+		recipient_type: "individual",
+		to: number,
+		context: {
+			"message_id": "<MSGID_OF_PREV_MSG>"
+		},
+		type: "location",
+		location: {
+			latitude: "25.682377037065898",
+			longitude: "-100.27760703386893",
+			name: "Tortas Estilo Mexico",
+			address: "Av. Cristóbal Colón 3702, Agrícola Acero, Monterrey, N.L."
+		}
+	})
+}
+
 module.exports = {
   messageText,
-  messageList
+  messageList,
+  messageButton,
+	messageLocation
 }
