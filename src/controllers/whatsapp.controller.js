@@ -13,9 +13,11 @@ const VerifyToken = (req, res ) => {
     if (challenge != null && token != null && accessToken) {
       res.send(challenge)
     } else {
+      myConsole.log(error);
       res.status(400).send() 
     }
   } catch (error) {
+    myConsole.log(error);
     res.status(400).send()
   }
 }

@@ -1,6 +1,6 @@
 const https = require("https");
 const fs = require('fs');
-const myConsole = new console.Console(fs.createWriteStream('./logs2.txt'));
+const myConsole = new console.Console(fs.createWriteStream('./logs.txt'));
 
 function sendMesaageWhatsapp(data ) {
   const options = {
