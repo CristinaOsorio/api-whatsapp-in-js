@@ -1,7 +1,6 @@
 const fs = require('fs');
 const myConsole = new console.Console(fs.createWriteStream('./logs.txt'));
-const whatsappService = require("../services/whatsapp.service");
-const samples = require("../shared/sampleModel.model");
+const processMessage = require("../shared/processMessage.model")
 
 const VerifyToken = (req, res ) => {
 
@@ -39,52 +38,8 @@ const ReceivedMessage = (req, res ) => {
       myConsole.log({number});
 
     
-      if (text == "text") {
-        myConsole.log('Entro a text');
-        let data = samples.sendText(`Hola usuario: ${number}` , number);
-        myConsole.log({data});
-        whatsappService.sendMesaageWhatsapp(data);
-      } 
-      else if (text == "image"){
-        myConsole.log('Entro a image');
-        let data = samples.sendImage(number);
-        whatsappService.sendMesaageWhatsapp(data);
-      }
-       else if (text == "video"){
-          myConsole.log('Entro a video');
-        let data = samples.sendVideo(number);
-        whatsappService.sendMesaageWhatsapp(data);
-      }
-       else if (text == "audio"){
-          myConsole.log('Entro a audio');
-        let data = samples.sendAudio(number);
-        whatsappService.sendMesaageWhatsapp(data);
-      }
-       else if (text == "document"){
-          myConsole.log('Entro a document');
-        let data = samples.sendDocument(number);
-        whatsappService.sendMesaageWhatsapp(data);
-      }
-      else if (text == "location"){
-        myConsole.log('Entro a location');
-        let data = samples.sendLocation(number);
-        whatsappService.sendMesaageWhatsapp(data);
-      } 
-       else if (text == "button"){
-          myConsole.log('Entro a button');
-        let data = samples.sendButton(number);
-        whatsappService.sendMesaageWhatsapp(data);
-      } 
-      else if (text == "list"){
-          myConsole.log('Entro a list');
-        let data = samples.sendList(number);
-        whatsappService.sendMesaageWhatsapp(data);
-      } 
-      else {
-        myConsole.log('Entro a default');
-        let data = samples.sendText("No entiendo ", number);
-        myConsole.log({data});
-        whatsappService.sendMesaageWhatsapp(data);
+      if (text != "") {
+        processMessage.proccess(text, number);
       }
     }
     res.send("EVENT_RECEIVED");
