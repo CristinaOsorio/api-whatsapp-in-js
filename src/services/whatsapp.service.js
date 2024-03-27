@@ -2,16 +2,16 @@ const https = require("https");
 const fs = require('fs');
 const myConsole = new console.Console(fs.createWriteStream('./logs.txt'));
 
-function sendMesaageWhatsapp(data ) {
+function sendMesaageWhatsapp(data) {
   const options = {
     host:"graph.facebook.com",
-    path: "/v16.0/101021989421165/messages",
+    path: `/v18.0/${process.env.ID}/messages`,
     method: "POST",
     body: data,
     // TODO: Colocar token Bearer
     headers: {
       "Content-Type": "application/json",
-      Authorization: ""
+      Authorization: process.env.METABASE
     }
   }
 

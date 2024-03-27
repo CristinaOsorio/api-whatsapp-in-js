@@ -6,11 +6,11 @@ const VerifyToken = (req, res ) => {
 
   try {
     // TODO: Crear token de acceso
-    let accessToken = "";
+    let accessToken = process.env.ACCESS_TOKEN;
     let token = req.query["hub.verify_token"];
     let challenge = req.query["hub.challenge"];
 
-    if (challenge != null && token != null && accessToken) {
+    if (challenge != null && token != null && token == accessToken) {
       res.send(challenge)
     } else {
       myConsole.log(error);
